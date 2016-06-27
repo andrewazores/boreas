@@ -1,3 +1,22 @@
+<!--
+    Boreas
+    Copyright 2016 Jie Kang, Anirudh Mukundan
+    This file is part of Boreas.
+
+    Boreas is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Boreas is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Boreas.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -9,6 +28,10 @@
   <version>0.1-ALPHA</version>
   <name>Boreas-Web-Layer-Alpha</name>
   <url>https://github.com/Anirudh94/Boreas</url>
+
+  <properties>
+    <jetty-version>9.1.0.v20131115</jetty-version>
+  </properties>
 
   <build>
     <plugins>
@@ -42,6 +65,17 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution><goals><goal>java</goal></goals></execution>
+        </executions>
+        <configuration>
+          <mainClass>org.boreas.main.Start</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -51,6 +85,11 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty-version}</version>
     </dependency>
   </dependencies>
 </project>
