@@ -45,6 +45,8 @@ public class WebLayer {
             server.join();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            server.destroy();
         }
     }
 }
