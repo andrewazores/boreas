@@ -19,6 +19,8 @@
 
 package org.boreas.web;
 
+
+import org.boreas.mongodb.MongoStorage;
 import org.boreas.web.handler.GetHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -29,6 +31,9 @@ import org.eclipse.jetty.server.ServerConnector;
  */
 public class WebLayer {
     public void start() {
+        MongoStorage storage = new MongoStorage("thermostat", 27518);
+        storage.start();
+
         Server server = new Server();
 
         ServerConnector http = new ServerConnector(server);
@@ -38,7 +43,7 @@ public class WebLayer {
 
         server.addConnector(http);
 
-        server.setHandler(new GetHandler());
+        server.setHandler(new GetHandler(storage.getDB()));
 
         try {
             server.start();
@@ -46,6 +51,7 @@ public class WebLayer {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            storage.finish();
             server.destroy();
         }
     }
