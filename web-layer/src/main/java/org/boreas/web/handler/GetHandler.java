@@ -25,17 +25,34 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoDatabase;
+
 public class GetHandler extends AbstractHandler {
+    private final MongoDatabase db;
+
+    public GetHandler(MongoDatabase db) {
+        this.db = db;
+    }
+
     @Override
     public void handle(String s, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String collection = request.getRequestURI().substring(1);
+        FindIterable<Document> iterable = db.getCollection(collection).find();
+
         response.setContentType("text/html; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
         PrintWriter out = response.getWriter();
-        out.println("<h1>" + "Hello World!" + "</h1>");
+        out.println(request.toString());
+        out.println("<h1>" + collection + "</h1>");
+        for (Document it : iterable) {
+            out.println(it.toJson() + "<br>");
+        }
 
         baseRequest.setHandled(true);
     }
