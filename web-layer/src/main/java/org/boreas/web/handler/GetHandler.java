@@ -25,6 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -42,18 +44,14 @@ public class GetHandler extends AbstractHandler {
     @Override
     public void handle(String s, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String collection = request.getRequestURI().substring(1);
-        FindIterable<Document> iterable = db.getCollection(collection).find();
+        MongoCursor<Document> iterator = db.getCollection(collection).find().sort(new BasicDBObject("_id",-1)).limit(1).iterator();
 
         response.setContentType("text/html; charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
         PrintWriter out = response.getWriter();
-        out.println(request.toString());
-        out.println("<h1>" + collection + "</h1>");
-        for (Document it : iterable) {
-            out.println(it.toJson() + "<br>");
-        }
-
+        out.println(iterator.next().toJson());
+        iterator.close();
         baseRequest.setHandled(true);
     }
 }
