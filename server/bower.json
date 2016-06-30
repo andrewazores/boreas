@@ -1,0 +1,9 @@
+{
+  "name": "boreas-server",
+  "version": "2.9.0",
+  "private": true,
+  "dependencies": {
+    "c3": "^0.4.11",
+    "jquery": "^3.0.0"
+  }
+}
