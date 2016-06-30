@@ -1,18 +1,23 @@
-var chart;
 var core1Stats = ['core1'];
-var createChart = data => {
+var chart = c3.generate({
+  bindto: '#chart',
+  data: {
+    columns: [
+      core1Stats
+    ],
+    types: {
+      core1: 'area'
+    }
+  }
+});
+
+var updateData = data => {
   console.log(data);
   core1Stats.push(data.perProcessorUsage[0]);
-  chart = c3.generate({
-    bindto: '#chart',
-    data: {
-      columns: [
-        core1Stats
-      ],
-      types: {
-        core1: 'area'
-      }
-    }
+  chart.load ({
+    columns: [
+      core1Stats
+    ]
   });
 };
 
@@ -20,7 +25,7 @@ var createChart = data => {
   setTimeout(function() {
     $.ajax({
       url: 'storage/cpu-stats',
-      success: createChart,
+      success: updateData,
       dataType: "json",
       complete: poll
     });
