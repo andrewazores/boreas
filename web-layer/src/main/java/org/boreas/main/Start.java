@@ -22,8 +22,8 @@ package org.boreas.main;
 import org.boreas.web.WebLayer;
 
 public class Start {
-    public static void main(String[] args) {
-      WebLayer webLayer = new WebLayer();
+    public static void main(String[] args) throws Exception {
+      WebLayer webLayer = new WebLayer("localhost");
       webLayer.start();
     }
 }

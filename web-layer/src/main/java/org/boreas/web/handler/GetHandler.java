@@ -49,7 +49,6 @@ public class GetHandler extends AbstractHandler {
 
         PrintWriter out = response.getWriter();
         out.println(request.toString());
-        out.println("<h1>" + collection + "</h1>");
         for (Document it : iterable) {
             out.println(it.toJson() + "<br>");
         }
