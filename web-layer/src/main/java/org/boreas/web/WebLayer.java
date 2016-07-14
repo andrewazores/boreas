@@ -23,9 +23,14 @@ package org.boreas.web;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.boreas.mongodb.MongoStorage;
-import org.boreas.web.handler.GetHandler;
+import org.boreas.web.handler.HttpHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 
 /**
@@ -50,14 +55,24 @@ public class WebLayer {
         MongoStorage storage = new MongoStorage("thermostat", 27518);
         storage.start();
 
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
 
         server = new Server();
+
         httpConnector = new ServerConnector(server);
         httpConnector.setHost(host);
         httpConnector.setIdleTimeout(30000);
-
         server.addConnector(httpConnector);
-        server.setHandler(new GetHandler(storage.getDB()));
+
+        server.setHandler(context);
+
+        ServletHolder jerseyServlet = context.addServlet(
+                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+        jerseyServlet.setInitOrder(0);
+        jerseyServlet.setInitParameter(
+                "jersey.config.server.provider.classnames",
+                HttpHandler.class.getCanonicalName());
 
         try {
             server.start();
@@ -79,10 +94,6 @@ public class WebLayer {
 
     public int getPort() {
         return httpConnector.getLocalPort();
-    }
-
-    public String getHost() {
-        return httpConnector.getHost();
     }
 
     public boolean isReady() {

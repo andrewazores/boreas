@@ -16,6 +16,8 @@ public class MongoStorage {
     private String username = "mongodevuser";
     private char[] password = "mongodevpassword".toCharArray();
 
+    private static MongoDatabase database;
+
     public MongoStorage(String dbName, int port) {
         this.dbName = dbName;
         this.port = port;
@@ -26,13 +28,15 @@ public class MongoStorage {
         ServerAddress address = new ServerAddress("127.0.0.1", port);
         mongoClient = new MongoClient(address, Arrays.asList(credential));
         db = mongoClient.getDatabase(dbName);
+
+        MongoStorage.database = db;
     }
 
     public void finish() {
         mongoClient.close();
     }
 
-    public MongoDatabase getDB() {
-        return this.db;
+    public static MongoDatabase getDatabase() {
+        return MongoStorage.database;
     }
 }

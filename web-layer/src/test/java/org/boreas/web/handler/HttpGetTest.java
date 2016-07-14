@@ -14,7 +14,7 @@ public class HttpGetTest extends AbstractHttpTest{
 
     @Test
     public void testGet() throws InterruptedException, ExecutionException, TimeoutException {
-        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "blob");
+        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "thermostat/blob");
         System.out.println(response.getContentAsString());
         assertTrue(response.getStatus() == 200);
     }
