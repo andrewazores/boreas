@@ -11,7 +11,7 @@ import org.bson.Document;
 
 import com.mongodb.client.FindIterable;
 
-@Path("thermostat")
+@Path("")
 public class HttpHandler {
 
     @GET
