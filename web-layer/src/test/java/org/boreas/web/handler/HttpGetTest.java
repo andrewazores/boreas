@@ -26,4 +26,18 @@ public class HttpGetTest extends AbstractHttpTest{
         assertTrue(response.getStatus() == 200);
     }
 
+    @Test
+    public void testGetLatestFromCollection() throws InterruptedException, ExecutionException, TimeoutException {
+        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "collection/latest");
+        System.out.println(response.getContentAsString());
+        assertTrue(response.getStatus() == 200);
+    }
+
+    @Test
+    public void testGetLatestFromCollectionByField() throws InterruptedException, ExecutionException, TimeoutException {
+        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "collection/field/value/latest");
+        System.out.println(response.getContentAsString());
+        assertTrue(response.getStatus() == 200);
+    }
+
 }
