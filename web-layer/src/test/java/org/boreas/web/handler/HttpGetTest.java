@@ -13,9 +13,17 @@ import org.junit.Test;
 public class HttpGetTest extends AbstractHttpTest{
 
     @Test
-    public void testGet() throws InterruptedException, ExecutionException, TimeoutException {
-        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "blob");
+    public void testGetCollection() throws InterruptedException, ExecutionException, TimeoutException {
+        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "collection");
         System.out.println(response.getContentAsString());
         assertTrue(response.getStatus() == 200);
     }
+    
+    @Test
+    public void testGetCollectionByField() throws InterruptedException, ExecutionException, TimeoutException {
+        ContentResponse response = client.GET("http://" + host + ":" + port + "/" + "collection/field/value");
+        System.out.println(response.getContentAsString());
+        assertTrue(response.getStatus() == 200);
+    }
+
 }

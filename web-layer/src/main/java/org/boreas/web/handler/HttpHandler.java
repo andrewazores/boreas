@@ -10,6 +10,7 @@ import org.boreas.mongodb.MongoStorage;
 import org.bson.Document;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Filters;
 
 @Path("")
 public class HttpHandler {
@@ -19,6 +20,22 @@ public class HttpHandler {
     @Produces(MediaType.TEXT_HTML)
     public String getCollection(@PathParam("collection") String collectionName) {
         FindIterable<Document> iterable = MongoStorage.getDatabase().getCollection(collectionName).find();
+
+        StringBuilder s = new StringBuilder();
+        for (Document it : iterable) {
+            s.append(it.toJson() + "<br>");
+        }
+
+        return s.toString();
+    }
+
+    @GET
+    @Path("{collection}/{field}/{value}")
+    @Produces(MediaType.TEXT_HTML)
+    public String getCollectionByField(@PathParam("collection") String collectionName,
+                                    @PathParam("field") String field,
+                                    @PathParam("value") String value) {
+        FindIterable<Document> iterable = MongoStorage.getDatabase().getCollection(collectionName).find(Filters.eq(field, value));
 
         StringBuilder s = new StringBuilder();
         for (Document it : iterable) {
