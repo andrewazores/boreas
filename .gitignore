@@ -4,3 +4,5 @@ target
 node_modules
 bower_components
 
+SERVER_IP
+
