@@ -7,6 +7,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.boreas.mongodb.MongoStorage;
+import org.boreas.mongodb.TimedRequest;
+import org.boreas.web.response.DocumentResponse;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
@@ -20,34 +22,26 @@ public class HttpHandler {
     @Path("{collection}")
     @Produces(MediaType.TEXT_HTML)
     public String getCollection(@PathParam("collection") String collectionName) {
-        FindIterable<Document> iterable = MongoStorage.getDatabase().
+        TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
+        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
                 getCollection(collectionName).
-                find();
+                find());
 
-        StringBuilder s = new StringBuilder();
-        for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
-        }
-
-        return s.toString();
+        return DocumentResponse.build(iterable, request.getElapsed());
     }
 
     @GET
     @Path("{collection}/latest")
     @Produces(MediaType.TEXT_HTML)
     public String getLatestFromCollection(@PathParam("collection") String collectionName) {
-        FindIterable<Document> iterable = MongoStorage.getDatabase().
+        TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
+        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find().
                 sort(new BasicDBObject("_id", -1)).
-                limit(1);
+                limit(1));
 
-        StringBuilder s = new StringBuilder();
-        for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
-        }
-
-        return s.toString();
+        return DocumentResponse.build(iterable, request.getElapsed());
     }
 
     @GET
@@ -56,16 +50,12 @@ public class HttpHandler {
     public String getCollectionByField(@PathParam("collection") String collectionName,
                                     @PathParam("field") String field,
                                     @PathParam("value") String value) {
-        FindIterable<Document> iterable = MongoStorage.getDatabase().
+        TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
+        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
                 getCollection(collectionName).
-                find(Filters.eq(field, value));
+                find(Filters.eq(field, value)));
 
-        StringBuilder s = new StringBuilder();
-        for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
-        }
-
-        return s.toString();
+        return DocumentResponse.build(iterable, request.getElapsed());
     }
 
     @GET
@@ -74,18 +64,14 @@ public class HttpHandler {
     public String getLatestFromCollectionByField(@PathParam("collection") String collectionName,
                                        @PathParam("field") String field,
                                        @PathParam("value") String value) {
-        FindIterable<Document> iterable = MongoStorage.getDatabase().
+        TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
+        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find(Filters.eq(field, value)).
                 sort(new BasicDBObject("_id", -1)).
-                limit(1);
+                limit(1));
 
-        StringBuilder s = new StringBuilder();
-        for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
-        }
-
-        return s.toString();
+        return DocumentResponse.build(iterable, request.getElapsed());
     }
 
 }
