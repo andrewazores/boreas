@@ -20,39 +20,80 @@
 package org.boreas.web;
 
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.boreas.mongodb.MongoStorage;
-import org.boreas.web.handler.GetHandler;
+import org.boreas.web.handler.HttpHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 
 /**
  * Web Layer for Thermostat that handles http requests from the client to the storage backend (mongodb) through REST API
  */
 public class WebLayer {
-    public void start() {
+
+    private final String host;
+    private Server server;
+    private ServerConnector httpConnector;
+
+    private AtomicBoolean ready = new AtomicBoolean(false);
+
+    public WebLayer() {
+        this("localhost");
+    }
+
+    public WebLayer(String host) {
+        this.host = host;
+    }
+
+    public void start() throws Exception {
         MongoStorage storage = new MongoStorage("thermostat", 27518);
         storage.start();
 
-        Server server = new Server();
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
 
-        ServerConnector http = new ServerConnector(server);
-        http.setHost("localhost");
-        http.setPort(8080);
-        http.setIdleTimeout(30000);
+        server = new Server();
 
-        server.addConnector(http);
+        httpConnector = new ServerConnector(server);
+        httpConnector.setHost(host);
+        httpConnector.setIdleTimeout(30000);
+        server.addConnector(httpConnector);
 
-        server.setHandler(new GetHandler(storage.getDB()));
+        server.setHandler(context);
 
+        ServletHolder jerseyServlet = context.addServlet(
+                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+        jerseyServlet.setInitOrder(0);
+        jerseyServlet.setInitParameter(
+                "jersey.config.server.provider.classnames",
+                HttpHandler.class.getCanonicalName());
         try {
             server.start();
+            ready.getAndSet(true);
             server.join();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             storage.finish();
-            server.destroy();
+            server.stop();
+            server.join();
         }
+    }
+
+    public void stop() throws Exception {
+        server.stop();
+        server.join();
+    }
+
+    public int getPort() {
+        return httpConnector.getLocalPort();
+    }
+
+    public boolean isReady() {
+        return ready.get();
     }
 }
