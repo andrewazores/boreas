@@ -4,16 +4,16 @@ var http = require('http'),
 var app = express();
 
 var port = process.env.PORT || 3000;
-var ip = '10.15.17.125';
+var ip = '10.15.17.134';
 
 app.use(express.static(__dirname + '/public'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
-app.get('/storage/:coll', (req, res) => {
+app.get('/:coll/latest', (req, res) => {
   console.log('requested~');
   var options = {
     hostname: '127.0.0.1',
     port: '8080',
-    path: '/' + req.params.coll,
+    path: '/' + req.params.coll + '/latest',
     method: 'GET'
   }
   http.request(options, cpuRes => {

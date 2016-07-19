@@ -44,7 +44,7 @@ public class HttpHandler {
 
         StringBuilder s = new StringBuilder();
         for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
+            s.append(it.toJson());
         }
 
         return s.toString();
@@ -82,7 +82,7 @@ public class HttpHandler {
 
         StringBuilder s = new StringBuilder();
         for (Document it : iterable) {
-            s.append(it.toJson() + "<br>");
+            s.append(it.toJson());
         }
 
         return s.toString();

@@ -24,7 +24,7 @@ var updateData = data => {
 (function poll() {
   setTimeout(function() {
     $.ajax({
-      url: 'storage/cpu-stats',
+      url: 'cpu-stats/latest',
       success: updateData,
       dataType: "json",
       complete: poll

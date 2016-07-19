@@ -56,7 +56,7 @@ public class WebLayer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
 
-        server = new Server();
+        server = new Server(8080);
 
         httpConnector = new ServerConnector(server);
         httpConnector.setHost(host);
@@ -79,8 +79,7 @@ public class WebLayer {
             e.printStackTrace();
         } finally {
             storage.finish();
-            server.stop();
-            server.join();
+            stop();
         }
     }
 
