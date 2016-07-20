@@ -13,7 +13,7 @@ var chart = c3.generate({
 
 var updateData = data => {
   console.log(data);
-  core1Stats.push(data.perProcessorUsage[0]);
+  core1Stats.push(data.response[0].perProcessorUsage[0]);
   chart.load ({
     columns: [
       core1Stats
