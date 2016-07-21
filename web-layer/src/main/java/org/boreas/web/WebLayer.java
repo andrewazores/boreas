@@ -66,11 +66,11 @@ public class WebLayer {
         server.setHandler(context);
 
         ServletHolder jerseyServlet = context.addServlet(
-                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+            org.glassfish.jersey.servlet.ServletContainer.class, "/*");
         jerseyServlet.setInitOrder(0);
         jerseyServlet.setInitParameter(
-                "jersey.config.server.provider.classnames",
-                HttpHandler.class.getCanonicalName());
+            "jersey.config.server.provider.classnames",
+            HttpHandler.class.getCanonicalName());
         try {
             server.start();
             ready.getAndSet(true);
@@ -83,9 +83,13 @@ public class WebLayer {
         }
     }
 
-    public void stop() throws Exception {
-        server.stop();
-        server.join();
+    public void stop() {
+        try {
+            server.stop();
+            server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int getPort() {

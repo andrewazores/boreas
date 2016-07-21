@@ -23,9 +23,9 @@ public class HttpHandler {
     @Produces(MediaType.TEXT_HTML)
     public String getCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find());
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
+            getCollection(collectionName).
+            find());
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -35,11 +35,11 @@ public class HttpHandler {
     @Produces(MediaType.TEXT_HTML)
     public String getLatestFromCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find().
-                sort(new BasicDBObject("_id", -1)).
-                limit(1));
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
+            getCollection(collectionName).
+            find().
+            sort(new BasicDBObject("_id", -1)).
+            limit(1));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -51,9 +51,9 @@ public class HttpHandler {
                                     @PathParam("field") String field,
                                     @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find(Filters.eq(field, value)));
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
+            getCollection(collectionName).
+            find(Filters.eq(field, value)));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -65,11 +65,11 @@ public class HttpHandler {
                                        @PathParam("field") String field,
                                        @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find(Filters.eq(field, value)).
-                sort(new BasicDBObject("_id", -1)).
-                limit(1));
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
+            getCollection(collectionName).
+            find(Filters.eq(field, value)).
+            sort(new BasicDBObject("_id", -1)).
+            limit(1));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
