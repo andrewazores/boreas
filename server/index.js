@@ -1,6 +1,8 @@
 var http = require('http'),
   express = require('express'),
-  fs = require('fs');
+  fs = require('fs'),
+  react = require('react'),
+  reactDOM = require('react-dom');
 
 var app = express();
 
