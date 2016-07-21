@@ -83,9 +83,13 @@ public class WebLayer {
         }
     }
 
-    public void stop() throws Exception {
-        server.stop();
-        server.join();
+    public void stop() {
+        try {
+            server.stop();
+            server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int getPort() {
