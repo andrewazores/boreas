@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "c3": "^0.4.11",
-    "jquery": "^3.0.0"
+    "jquery": "^3.0.0",
+    "react" : "^15.2.1"
   }
 }
