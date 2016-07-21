@@ -23,7 +23,7 @@ public class HttpHandler {
     @Produces(MediaType.TEXT_HTML)
     public String getCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find());
 
@@ -35,7 +35,7 @@ public class HttpHandler {
     @Produces(MediaType.TEXT_HTML)
     public String getLatestFromCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find().
                 sort(new BasicDBObject("_id", -1)).
@@ -51,7 +51,7 @@ public class HttpHandler {
                                     @PathParam("field") String field,
                                     @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find(Filters.eq(field, value)));
 
@@ -65,7 +65,7 @@ public class HttpHandler {
                                        @PathParam("field") String field,
                                        @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
-        FindIterable<Document> iterable = request.run((TimedRequest.TimedRunnable) () -> MongoStorage.getDatabase().
+        FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
                 getCollection(collectionName).
                 find(Filters.eq(field, value)).
                 sort(new BasicDBObject("_id", -1)).
