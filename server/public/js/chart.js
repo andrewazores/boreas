@@ -1,9 +1,13 @@
-var core1Stats = ['core1'];
+var c1Data = ['core1'];
+
+var sliding = 0;
+var clength = 100;
+
 var chart = c3.generate({
   bindto: '#chart',
   data: {
     columns: [
-      core1Stats
+      c1Data
     ],
     types: {
       core1: 'area'
@@ -12,13 +16,24 @@ var chart = c3.generate({
 });
 
 var updateData = data => {
-  console.log(data);
-  core1Stats.push(data.response[0].perProcessorUsage[0]);
-  chart.load ({
-    columns: [
-      core1Stats
-    ]
-  });
+  c1Data.push(data.response[0].perProcessorUsage[0]);
+  if (!sliding) {
+    chart.load({
+      columns : [
+        c1Data
+      ]
+    });
+    if (c1Data.length > clength) {
+      sliding = 1;
+    }
+  }  else {
+    chart.flow({
+      columns : [
+        ['core1', c1Data[c1Data.length-1]]
+      ]
+    });
+  }
+
 };
 
 (function poll() {
