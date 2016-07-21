@@ -24,8 +24,8 @@ public class HttpHandler {
     public String getCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
         FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find());
+            getCollection(collectionName).
+            find());
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -36,10 +36,10 @@ public class HttpHandler {
     public String getLatestFromCollection(@PathParam("collection") String collectionName) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
         FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find().
-                sort(new BasicDBObject("_id", -1)).
-                limit(1));
+            getCollection(collectionName).
+            find().
+            sort(new BasicDBObject("_id", -1)).
+            limit(1));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -52,8 +52,8 @@ public class HttpHandler {
                                     @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
         FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find(Filters.eq(field, value)));
+            getCollection(collectionName).
+            find(Filters.eq(field, value)));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }
@@ -66,10 +66,10 @@ public class HttpHandler {
                                        @PathParam("value") String value) {
         TimedRequest<FindIterable<Document>> request = new TimedRequest<>();
         FindIterable<Document> iterable = request.run(() -> MongoStorage.getDatabase().
-                getCollection(collectionName).
-                find(Filters.eq(field, value)).
-                sort(new BasicDBObject("_id", -1)).
-                limit(1));
+            getCollection(collectionName).
+            find(Filters.eq(field, value)).
+            sort(new BasicDBObject("_id", -1)).
+            limit(1));
 
         return DocumentResponse.build(iterable, request.getElapsed());
     }

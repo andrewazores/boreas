@@ -66,11 +66,11 @@ public class WebLayer {
         server.setHandler(context);
 
         ServletHolder jerseyServlet = context.addServlet(
-                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+            org.glassfish.jersey.servlet.ServletContainer.class, "/*");
         jerseyServlet.setInitOrder(0);
         jerseyServlet.setInitParameter(
-                "jersey.config.server.provider.classnames",
-                HttpHandler.class.getCanonicalName());
+            "jersey.config.server.provider.classnames",
+            HttpHandler.class.getCanonicalName());
         try {
             server.start();
             ready.getAndSet(true);
