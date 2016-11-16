@@ -20,7 +20,6 @@
 package org.boreas.web;
 
 
-import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,8 +30,6 @@ import org.boreas.web.handler.HttpHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
