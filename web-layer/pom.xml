@@ -30,9 +30,9 @@
   <url>https://github.com/Anirudh94/Boreas</url>
 
   <properties>
-    <jetty-version>9.2.3.v20140905</jetty-version>
+    <jetty-version>9.2.19.v20160908</jetty-version>
     <mongo-java-driver-version>3.2.1</mongo-java-driver-version>
-    <jersey-version>2.7</jersey-version>
+    <jersey-version>2.24</jersey-version>
   </properties>
 
   <build>
@@ -122,6 +122,12 @@
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-jetty-http</artifactId>
       <version>${jersey-version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-util</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>

@@ -20,14 +20,21 @@
 package org.boreas.web;
 
 
+import java.lang.management.ManagementFactory;
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.ws.rs.core.UriBuilder;
 
 import org.boreas.mongodb.MongoStorage;
 import org.boreas.web.handler.HttpHandler;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 
 /**
@@ -50,27 +57,24 @@ public class WebLayer {
     }
 
     public void start() throws Exception {
+
         MongoStorage storage = new MongoStorage("thermostat", 27518);
         storage.start();
 
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
+        URI baseUri = UriBuilder.fromUri("http://localhost/").port(8080).build();
 
-        server = new Server(8080);
+        ResourceConfig config = new ResourceConfig();
+        config.register(new HttpHandler());
+
+        server = JettyHttpContainerFactory.createServer(baseUri, config, false);
 
         httpConnector = new ServerConnector(server);
         httpConnector.setHost(host);
         httpConnector.setIdleTimeout(30000);
-        server.addConnector(httpConnector);
+        httpConnector.setPort(8081);
 
-        server.setHandler(context);
+        server.setConnectors(new Connector[]{httpConnector});
 
-        ServletHolder jerseyServlet = context.addServlet(
-            org.glassfish.jersey.servlet.ServletContainer.class, "/*");
-        jerseyServlet.setInitOrder(0);
-        jerseyServlet.setInitParameter(
-            "jersey.config.server.provider.classnames",
-            HttpHandler.class.getCanonicalName());
         try {
             server.start();
             ready.getAndSet(true);
