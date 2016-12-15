@@ -1,10 +1,27 @@
 var cpuStatsModelPrototype = {
-    _data: [ 'core1' ],
+    _data: [],
 
-    init: function(){}
+    init: function() {
+        _this = this;
+        $.ajax({
+            url: 'cpu-stats/latest',
+            success: data => { _this.initData(data); },
+            dataType: 'json',
+            async: false
+        });
+    },
 
-e   setData: function(data) {
-        this._data.push(data.response[0].perProcessorUsage[0]);
+    initData: function(data) {
+        var processorUsage = data.response[0].perProcessorUsage;
+        var row = [];
+        for (i = 0; i < processorUsage.length; i++) {
+            row[i] = ['core' + i];
+        }
+        this._data.push(row);
+    },
+
+    setData: function(data) {
+        this._data.push(data.response[0].perProcessorUsage);
     },
 
     update: function() {
@@ -24,17 +41,14 @@ var cpuStatsViewPrototype = {
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
-                columns: [[]],
-                types: {
-                    core1: 'area'
-                }
+                rows: [[]],
             },
         });
     },
 
     setData: function(data) {
         this.chart.load({
-            columns: [data]
+            rows: data
         });
     }
 }
