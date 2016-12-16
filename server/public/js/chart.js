@@ -44,6 +44,17 @@ var cpuStatsViewPrototype = {
                 type: 'area-spline',
                 groups: [keys]
             },
+            grid: {
+                y: {
+                    show: true
+                }
+            },
+            axis: {
+                y: {
+                    default: [0, 100 * keys.length],
+                    max: 100 * keys.length
+                }
+            },
             transition: {
                 duration: 0
             }
