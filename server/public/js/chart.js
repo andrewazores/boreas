@@ -37,15 +37,11 @@ var cpuStatsViewPrototype = {
     chart: null,
 
     init: function(keys) {
-        var datatypes = [];
-        for (i = 0; i < keys.length; i++) {
-            datatypes[keys[i]] = 'area-spline';
-        }
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
                 rows: [keys],
-                types: datatypes,
+                type: 'area-spline',
                 groups: [keys]
             },
             transition: {
