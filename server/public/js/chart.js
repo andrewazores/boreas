@@ -1,5 +1,6 @@
 var cpuStatsModelPrototype = {
     _data: [],
+    _keys: [],
 
     init: function() {
         _this = this;
@@ -13,14 +14,12 @@ var cpuStatsModelPrototype = {
 
     initData: function(data) {
         var processorUsage = data.response[0].perProcessorUsage;
-        var row = [];
         for (i = 0; i < processorUsage.length; i++) {
-            row[i] = ['core' + i];
+            this._keys.push('core' + i);
         }
-        this._data.push(row);
     },
 
-    setData: function(data) {
+    addData: function(data) {
         this._data.push(data.response[0].perProcessorUsage);
     },
 
@@ -28,8 +27,8 @@ var cpuStatsModelPrototype = {
         _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
-            success: data => { _this.setData(data); },
-            dataType: 'json',
+            success: data => { _this.addData(data); },
+            dataType: 'json'
         });
     }
 }
@@ -37,12 +36,12 @@ var cpuStatsModelPrototype = {
 var cpuStatsViewPrototype = {
     chart: null,
 
-    init: function() {
+    init: function(keys) {
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
-                rows: [[]],
-            },
+                rows: [keys]
+            }
         });
     },
 
@@ -59,13 +58,14 @@ var cpuStatsControllerPrototype = {
 
     init: function() {
         this._model.init();
-        this._view.init();
+        this._view.init(this._model._keys);
     },
 
     update: function() {
         this._model.update();
-        this._view.setData(this._model._data);
-    },
+        var update = [this._model._keys].concat(this._model._data);
+        this._view.setData(update);
+    }
 }
 
 var cpuStatsController = Object.create(cpuStatsControllerPrototype);
