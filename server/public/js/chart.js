@@ -6,13 +6,13 @@ var cpuStatsModelPrototype = {
         _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
-            success: data => { _this.initData(data); },
+            success: data => { _this.initKeys(data); },
             dataType: 'json',
             async: false
         });
     },
 
-    initData: function(data) {
+    initKeys: function(data) {
         var processorUsage = data.response[0].perProcessorUsage;
         for (i = 0; i < processorUsage.length; i++) {
             this._keys.push('core' + i);
