@@ -64,6 +64,7 @@ var cpuStatsViewPrototype = {
 var cpuStatsControllerPrototype = {
     _model: null,
     _view: null,
+    _limit: 0,
 
     init: function() {
         this._model.init();
@@ -72,7 +73,12 @@ var cpuStatsControllerPrototype = {
 
     update: function() {
         this._model.update();
-        var update = [this._model._keys].concat(this._model._data);
+        var len = this._model._data.length - this._limit;
+        if (len < 0) {
+            len = 0;
+        }
+        var update = this._model._data.slice(len);
+        update.unshift(this._model._keys);
         this._view.setData(update);
     }
 }
@@ -82,6 +88,7 @@ cpuStatsController._view = Object.create(cpuStatsViewPrototype);
 cpuStatsController._model = Object.create(cpuStatsModelPrototype);
 
 cpuStatsController.init();
+cpuStatsController._limit = 30;
 setInterval(function() {
     cpuStatsController.update();
 }, 1000);
