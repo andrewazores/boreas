@@ -1,6 +1,6 @@
 var cpuStatsModelPrototype = {
     _data: [],
-    _keys: [],
+    _keys: ['date'],
 
     init: function() {
         _this = this;
@@ -20,7 +20,9 @@ var cpuStatsModelPrototype = {
     },
 
     addData: function(data) {
-        this._data.push(data.response[0].perProcessorUsage);
+        var resp = data.response[0];
+        var date = new Date(new Number(resp.timeStamp.$numberLong));
+        this._data.push([date].concat(resp.perProcessorUsage));
     },
 
     update: function() {
@@ -36,10 +38,11 @@ var cpuStatsModelPrototype = {
 var cpuStatsViewPrototype = {
     chart: null,
 
-    init: function(keys) {
+    init: function(keys, limit) {
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
+                x: keys[0],
                 rows: [keys],
                 type: 'area-spline',
                 groups: [keys]
@@ -50,9 +53,15 @@ var cpuStatsViewPrototype = {
                 }
             },
             axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        format: '%H:%M:%S'
+                    }
+                },
                 y: {
-                    default: [0, 100 * keys.length],
-                    max: 100 * keys.length
+                    default: [0, 100 * (keys.length - 1)],
+                    max: (100 * keys.length) - 1
                 }
             },
             transition: {
