@@ -38,14 +38,16 @@ var cpuStatsModelPrototype = {
 var cpuStatsViewPrototype = {
     chart: null,
 
-    init: function(keys, limit) {
+    init: function(keys, mouseover, mouseout) {
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
                 x: keys[0],
                 rows: [keys],
                 type: 'area-spline',
-                groups: [keys]
+                groups: [keys],
+                onmouseover: mouseover,
+                onmouseout: mouseout
             },
             grid: {
                 y: {
@@ -81,13 +83,20 @@ var cpuStatsControllerPrototype = {
     _model: null,
     _view: null,
     _limit: 0,
+    _enabled: true,
 
     init: function() {
         this._model.init();
-        this._view.init(this._model._keys);
+        this._view.init(this._model._keys,
+                (d, i) => { this._enabled = false; },
+                (d, i) => { this._enabled = true; }
+            );
     },
 
     update: function() {
+        if (!this._enabled) {
+            return;
+        }
         this._model.update();
         var len = this._model._data.length - this._limit;
         if (len < 0) {
