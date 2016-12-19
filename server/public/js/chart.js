@@ -94,10 +94,10 @@ var cpuStatsControllerPrototype = {
     },
 
     update: function() {
+        this._model.update();
         if (!this._enabled) {
             return;
         }
-        this._model.update();
         var len = this._model._data.length - this._limit;
         if (len < 0) {
             len = 0;
