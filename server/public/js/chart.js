@@ -1,8 +1,10 @@
 var cpuStatsModelPrototype = {
     _data: [],
     _keys: ['date'],
+    _limit: -1,
 
-    init: function() {
+    init: function(limit) {
+        this._limit = limit;
         _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
@@ -23,6 +25,9 @@ var cpuStatsModelPrototype = {
         var resp = data.response[0];
         var date = new Date(new Number(resp.timeStamp.$numberLong));
         this._data.push([date].concat(resp.perProcessorUsage));
+        if (this._limit > 0 && this._data.length > this._limit) {
+            this._data.shift();
+        }
     },
 
     update: function() {
@@ -86,7 +91,7 @@ var cpuStatsControllerPrototype = {
     _enabled: true,
 
     init: function() {
-        this._model.init();
+        this._model.init(this._limit);
         this._view.init(this._model._keys,
                 (d, i) => { this._enabled = false; },
                 (d, i) => { this._enabled = true; }
@@ -98,13 +103,7 @@ var cpuStatsControllerPrototype = {
         if (!this._enabled) {
             return;
         }
-        var len = this._model._data.length - this._limit;
-        if (len < 0) {
-            len = 0;
-        }
-        var update = this._model._data.slice(len);
-        update.unshift(this._model._keys);
-        this._view.setData(update);
+        this._view.setData([this._model._keys].concat(this._model._data));
     }
 }
 
