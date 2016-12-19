@@ -61,7 +61,7 @@ var cpuStatsViewPrototype = {
                 },
                 y: {
                     default: [0, 100 * (keys.length - 1)],
-                    max: (100 * keys.length) - 1
+                    max: 100 * (keys.length - 1)
                 }
             },
             transition: {
