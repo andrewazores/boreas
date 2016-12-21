@@ -21,28 +21,22 @@ class CpuStatsModel {
         });
     }
 
-    addData(data) {
-        var resp = data.response[0];
-        var date = new Date(parseInt(resp.timeStamp.$numberLong));
-        this.data.push([date].concat(resp.perProcessorUsage));
-
-        while (this.data.length > 0) {
-            var now = Date.now();
-            var oldest = this.data[0];
-            var age = (now - oldest[0]) / 1000;
-            if (age > this.maxAge) {
-                this.data.shift();
-            } else {
-                break;
-            }
-        }
-    }
-
     update() {
-        $.ajax({
-            url: 'cpu-stats/latest',
-            success: data => { this.addData(data); },
-            dataType: 'json'
+        $.getJSON('cpu-stats/latest', data => {
+            var resp = data.response[0];
+            var date = new Date(parseInt(resp.timeStamp.$numberLong));
+            this.data.push([date].concat(resp.perProcessorUsage));
+
+            while (this.data.length > 0) {
+                var now = Date.now();
+                var oldest = this.data[0];
+                var age = (now - oldest[0]) / 1000;
+                if (age > this.maxAge) {
+                    this.data.shift();
+                } else {
+                    break;
+                }
+            }
         });
     }
 }
