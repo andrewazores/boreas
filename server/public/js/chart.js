@@ -1,7 +1,7 @@
 var cpuStatsModelPrototype = {
     _data: [],
     _keys: ['date'],
-    _limit: -1,
+    _maxAge: -1,
 
     init: function(limit) {
         this._limit = limit;
@@ -25,8 +25,16 @@ var cpuStatsModelPrototype = {
         var resp = data.response[0];
         var date = new Date(new Number(resp.timeStamp.$numberLong));
         this._data.push([date].concat(resp.perProcessorUsage));
-        if (this._limit > 0 && this._data.length > this._limit) {
-            this._data.shift();
+
+        while (this._data.length > 0) {
+            var now = Date.now();
+            var oldest = this._data[0];
+            var age = (now - oldest[0]) / 1000;
+            if (age > this._maxAge) {
+                this._data.shift();
+            } else {
+                break;
+            }
         }
     },
 
@@ -97,8 +105,8 @@ var cpuStatsControllerPrototype = {
     _view: null,
     _enabled: true,
 
-    init: function(limit) {
-        this._model.init(limit);
+    init: function() {
+        this._model.init();
         this._view.init(this._model._keys,
                 (d, i) => { this._enabled = false; },
                 (d, i) => { this._enabled = true; }
@@ -118,7 +126,20 @@ var cpuStatsController = Object.create(cpuStatsControllerPrototype);
 cpuStatsController._view = Object.create(cpuStatsViewPrototype);
 cpuStatsController._model = Object.create(cpuStatsModelPrototype);
 
-cpuStatsController.init(30);
-setInterval(function() {
-    cpuStatsController.update();
-}, 1000);
+var intervalId = null;
+function setUpdatePeriod(v) {
+    clearInterval(intervalId);
+    intervalId = setInterval(function() {
+        cpuStatsController.update();
+    }, v);
+}
+
+function setDataAgeLimit(v) {
+    cpuStatsController._model._maxAge = v;
+}
+
+window.onload = function() {
+    cpuStatsController.init();
+    setUpdatePeriod(this.updatePeriodSelect.value);
+    setDataAgeLimit(this.dataAgeLimitSelect.value);
+};
