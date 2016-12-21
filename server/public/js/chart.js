@@ -59,6 +59,9 @@ var cpuStatsViewPrototype = {
                 right: 50,
                 left: 50
             },
+            legend: {
+                position: 'inset'
+            },
             grid: {
                 y: {
                     show: true
