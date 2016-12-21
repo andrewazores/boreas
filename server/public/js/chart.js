@@ -7,7 +7,7 @@ class CpuStatsModel {
         this.maxAge = -1;
     }
 
-    initKeys(data) {
+    initKeys() {
         $.ajax({
             url: 'cpu-stats/latest',
             success: data => {
