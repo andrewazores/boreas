@@ -1,45 +1,44 @@
-var cpuStatsModelPrototype = {
-    _data: [],
-    _keys: ['date'],
-    _maxAge: -1,
+class CpuStatsModel {
+    constructor() {
+        this.data = [];
+        this.keys = ['date'];
+        this.maxAge = -1;
 
-    init: function(limit) {
-        this._limit = limit;
-        _this = this;
+        var _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
             success: data => { _this.initKeys(data); },
             dataType: 'json',
             async: false
         });
-    },
+    }
 
-    initKeys: function(data) {
+    initKeys(data) {
         var processorUsage = data.response[0].perProcessorUsage;
-        for (i = 0; i < processorUsage.length; i++) {
-            this._keys.push('core' + i);
+        for (var i = 0; i < processorUsage.length; i++) {
+            this.keys.push('core' + i);
         }
-    },
+    }
 
-    addData: function(data) {
+    addData(data) {
         var resp = data.response[0];
         var date = new Date(new Number(resp.timeStamp.$numberLong));
-        this._data.push([date].concat(resp.perProcessorUsage));
+        this.data.push([date].concat(resp.perProcessorUsage));
 
-        while (this._data.length > 0) {
+        while (this.data.length > 0) {
             var now = Date.now();
-            var oldest = this._data[0];
+            var oldest = this.data[0];
             var age = (now - oldest[0]) / 1000;
-            if (age > this._maxAge) {
-                this._data.shift();
+            if (age > this.maxAge) {
+                this.data.shift();
             } else {
                 break;
             }
         }
-    },
+    }
 
-    update: function() {
-        _this = this;
+    update() {
+        var _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
             success: data => { _this.addData(data); },
@@ -48,10 +47,8 @@ var cpuStatsModelPrototype = {
     }
 }
 
-var cpuStatsViewPrototype = {
-    chart: null,
-
-    init: function(keys, mouseover, mouseout) {
+class CpuStatsView {
+    constructor(keys, mouseover, mouseout) {
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
@@ -91,40 +88,39 @@ var cpuStatsViewPrototype = {
                 duration: 0
             }
         });
-    },
+    }
 
-    setData: function(data) {
+    setData(data) {
         this.chart.load({
             rows: data
         });
     }
 }
 
-var cpuStatsControllerPrototype = {
-    _model: null,
-    _view: null,
-    _enabled: true,
-
-    init: function() {
-        this._model.init();
-        this._view.init(this._model._keys,
-                (d, i) => { this._enabled = false; },
-                (d, i) => { this._enabled = true; }
+class CpuStatsController {
+    constructor() {
+        this.model = new CpuStatsModel();
+        this.view = new CpuStatsView(this.model.keys,
+                (d, i) => { this.enabled = false; },
+                (d, i) => { this.enabled = true; }
             );
-    },
+        this.enabled = true;
+    }
 
-    update: function() {
-        this._model.update();
-        if (!this._enabled) {
+    update() {
+        this.model.update();
+        if (!this.enabled) {
             return;
         }
-        this._view.setData([this._model._keys].concat(this._model._data));
+        this.view.setData([this.model.keys].concat(this.model.data));
+    }
+
+    setMaxAge(maxAge) {
+        this.model.maxAge = maxAge;
     }
 }
 
-var cpuStatsController = Object.create(cpuStatsControllerPrototype);
-cpuStatsController._view = Object.create(cpuStatsViewPrototype);
-cpuStatsController._model = Object.create(cpuStatsModelPrototype);
+var cpuStatsController = new CpuStatsController();
 
 var intervalId = null;
 function setUpdatePeriod(v) {
@@ -135,11 +131,10 @@ function setUpdatePeriod(v) {
 }
 
 function setDataAgeLimit(v) {
-    cpuStatsController._model._maxAge = v;
+    cpuStatsController.setMaxAge(v);
 }
 
 window.onload = function() {
-    cpuStatsController.init();
     setUpdatePeriod(this.updatePeriodSelect.value);
     setDataAgeLimit(this.dataAgeLimitSelect.value);
 };
