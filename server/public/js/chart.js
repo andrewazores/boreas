@@ -21,7 +21,7 @@ class CpuStatsModel {
 
     addData(data) {
         var resp = data.response[0];
-        var date = new Date(new Number(resp.timeStamp.$numberLong));
+        var date = new Date(parseInt(resp.timeStamp.$numberLong));
         this.data.push([date].concat(resp.perProcessorUsage));
 
         while (this.data.length > 0) {
