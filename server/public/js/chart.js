@@ -3,21 +3,20 @@ class CpuStatsModel {
         this.data = [];
         this.keys = ['date'];
         this.maxAge = -1;
-
-        var _this = this;
-        $.ajax({
-            url: 'cpu-stats/latest',
-            success: data => { _this.initKeys(data); },
-            dataType: 'json',
-            async: false
-        });
     }
 
     initKeys(data) {
-        var processorUsage = data.response[0].perProcessorUsage;
-        for (var i = 0; i < processorUsage.length; i++) {
-            this.keys.push('core' + i);
-        }
+        $.ajax({
+            url: 'cpu-stats/latest',
+            success: data => {
+                var processorUsage = data.response[0].perProcessorUsage;
+                for (var i = 0; i < processorUsage.length; i++) {
+                    this.keys.push('core' + i);
+                }
+            },
+            dataType: 'json',
+            async: false
+        });
     }
 
     addData(data) {
@@ -38,10 +37,9 @@ class CpuStatsModel {
     }
 
     update() {
-        var _this = this;
         $.ajax({
             url: 'cpu-stats/latest',
-            success: data => { _this.addData(data); },
+            success: data => { this.addData(data); },
             dataType: 'json'
         });
     }
@@ -100,6 +98,7 @@ class CpuStatsView {
 class CpuStatsController {
     constructor() {
         this.model = new CpuStatsModel();
+        this.model.initKeys();
         this.view = new CpuStatsView(this.model.keys,
                 (d, i) => { this.enabled = false; },
                 (d, i) => { this.enabled = true; }
