@@ -112,7 +112,7 @@ class CpuStatsController {
 
     stop() {
         if (this.intervalId != null) {
-            window.clearInterval(intervalId);
+            window.clearInterval(this.intervalId);
         }
     }
 
