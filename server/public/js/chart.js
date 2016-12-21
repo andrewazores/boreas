@@ -54,6 +54,11 @@ var cpuStatsViewPrototype = {
                 onmouseover: mouseover,
                 onmouseout: mouseout
             },
+            padding: {
+                top: 20,
+                right: 50,
+                left: 50
+            },
             grid: {
                 y: {
                     show: true
