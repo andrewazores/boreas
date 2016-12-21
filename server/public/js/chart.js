@@ -106,6 +106,26 @@ class CpuStatsController {
                 (d, i) => { this.enabled = true; }
             );
         this.enabled = true;
+        this.updatePeriod = 1000;
+        this.intervalId = null;
+    }
+
+    stop() {
+        if (this.intervalId != null) {
+            window.clearInterval(intervalId);
+        }
+    }
+
+    start() {
+        stop();
+        var _this = this;
+        this.intervalId = setInterval(() => { _this.update.call(_this); }, this.updatePeriod);
+    }
+
+    setUpdatePeriod(period) {
+        this.stop();
+        this.updatePeriod = period;
+        this.start();
     }
 
     update() {
@@ -123,12 +143,8 @@ class CpuStatsController {
 
 var cpuStatsController = new CpuStatsController();
 
-var intervalId = null;
 function setUpdatePeriod(v) {
-    clearInterval(intervalId);
-    intervalId = setInterval(function() {
-        cpuStatsController.update();
-    }, v);
+    cpuStatsController.setUpdatePeriod(v);
 }
 
 function setDataAgeLimit(v) {
@@ -138,4 +154,9 @@ function setDataAgeLimit(v) {
 window.onload = function() {
     setUpdatePeriod(this.updatePeriodSelect.value);
     setDataAgeLimit(this.dataAgeLimitSelect.value);
+    cpuStatsController.start.call(cpuStatsController);
 };
+
+window.onunload = function() {
+    cpuStatsController.stop.call(cpuStatsController);
+}
