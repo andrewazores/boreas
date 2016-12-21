@@ -1,3 +1,5 @@
+"use strict";
+
 class CpuStatsModel {
     constructor() {
         this.data = [];
