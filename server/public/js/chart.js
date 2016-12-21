@@ -151,12 +151,12 @@ function setDataAgeLimit(v) {
     cpuStatsController.setMaxAge(v);
 }
 
-window.onload = function() {
+window.addEventListener("load", function() {
     setUpdatePeriod(this.updatePeriodSelect.value);
     setDataAgeLimit(this.dataAgeLimitSelect.value);
     cpuStatsController.start.call(cpuStatsController);
-};
+});
 
-window.onunload = function() {
+window.addEventListener("unload",  function() {
     cpuStatsController.stop.call(cpuStatsController);
-}
+});
