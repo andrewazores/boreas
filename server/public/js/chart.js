@@ -111,15 +111,12 @@ class CpuStatsController {
     }
 
     start() {
-        stop();
         var _this = this;
         this.intervalId = setInterval(() => { _this.update.call(_this); }, this.updatePeriod);
     }
 
     setUpdatePeriod(period) {
-        this.stop();
         this.updatePeriod = period;
-        this.start();
     }
 
     update() {
@@ -138,7 +135,9 @@ class CpuStatsController {
 var cpuStatsController = new CpuStatsController();
 
 function setUpdatePeriod(v) {
+    cpuStatsController.stop();
     cpuStatsController.setUpdatePeriod(v);
+    cpuStatsController.start();
 }
 
 function setDataAgeLimit(v) {
@@ -146,9 +145,8 @@ function setDataAgeLimit(v) {
 }
 
 window.addEventListener("load", function() {
-    setUpdatePeriod(this.updatePeriodSelect.value);
     setDataAgeLimit(this.dataAgeLimitSelect.value);
-    cpuStatsController.start.call(cpuStatsController);
+    setUpdatePeriod(this.updatePeriodSelect.value);
 });
 
 window.addEventListener("unload",  function() {
