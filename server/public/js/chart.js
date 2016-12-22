@@ -11,7 +11,7 @@ class CpuStatsModel {
         $.ajax({
             url: 'cpu-stats/latest',
             success: data => {
-                var processorUsage = data.response[0].perProcessorUsage;
+                const processorUsage = data.response[0].perProcessorUsage;
                 for (var i = 0; i < processorUsage.length; i++) {
                     this.keys.push('core' + i);
                 }
@@ -23,14 +23,14 @@ class CpuStatsModel {
 
     update() {
         $.getJSON('cpu-stats/latest', data => {
-            var resp = data.response[0];
-            var date = new Date(parseInt(resp.timeStamp.$numberLong));
+            const resp = data.response[0];
+            const date = new Date(parseInt(resp.timeStamp.$numberLong));
             this.data.push([date].concat(resp.perProcessorUsage));
 
             while (this.data.length > 0) {
-                var now = Date.now();
-                var oldest = this.data[0];
-                var age = (now - oldest[0]) / 1000;
+                const now = Date.now();
+                const oldest = this.data[0];
+                const age = (now - oldest[0]) / 1000;
                 if (age > this.maxAge) {
                     this.data.shift();
                 } else {
@@ -111,7 +111,7 @@ class CpuStatsController {
     }
 
     start() {
-        var _this = this;
+        const _this = this;
         this.intervalId = setInterval(() => { _this.update.call(_this); }, this.updatePeriod);
     }
 
@@ -132,7 +132,7 @@ class CpuStatsController {
     }
 }
 
-var cpuStatsController = new CpuStatsController();
+const cpuStatsController = new CpuStatsController();
 
 function setUpdatePeriod(v) {
     cpuStatsController.stop();
