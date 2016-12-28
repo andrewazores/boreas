@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
+    "preinstall": "babel public/js -d public/lib",
     "postinstall": "bower update",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,5 +26,9 @@
   "homepage": "https://github.com/Anirudh94/boreas#readme",
   "dependencies": {
     "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-env": "^1.1.4"
   }
 }
