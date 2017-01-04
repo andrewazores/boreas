@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class CpuStatsModel {
     constructor() {
@@ -124,7 +124,7 @@ class CpuStatsController {
         this.updatePeriod = 1000;
         this.intervalId = null;
 
-        this.model.initKeys((keys) => {
+        this.model.initKeys(keys => {
             this.view.init(keys,
                     (d, i) => { this.enabled = false; },
                     (d, i) => { this.enabled = true; }
@@ -182,11 +182,11 @@ function setDataAgeLimit(v) {
 var dataAgeLimitSelect = document.getElementById('dataAgeLimitSelect');
 dataAgeLimitSelect.addEventListener('change', () => { setDataAgeLimit(dataAgeLimitSelect.value); });
 
-window.addEventListener("load", function() {
+window.addEventListener('load', function() {
     setDataAgeLimit(this.dataAgeLimitSelect.value);
     setUpdatePeriod(this.updatePeriodSelect.value);
 });
 
-window.addEventListener("unload",  function() {
+window.addEventListener('unload',  function() {
     cpuStatsController.stop.call(cpuStatsController);
 });
