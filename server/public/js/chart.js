@@ -29,7 +29,7 @@ class CpuStatsModel {
                 const now = Date.now();
                 const oldest = this.data[0];
                 const age = (now - oldest[0]) / 1000;
-                if (age > this.maxAge) {
+                if (this.maxAge > 0 && age > this.maxAge) {
                     this.data.shift();
                 } else {
                     break;
@@ -142,6 +142,9 @@ class CpuStatsController {
     start() {
         if (this.intervalId) {
             stop();
+        }
+        if (this.updatePeriod <= 0) {
+            return;
         }
         this.intervalId = window.setInterval(() => { this.update(); }, this.updatePeriod);
     }
