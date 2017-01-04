@@ -7,18 +7,16 @@ class CpuStatsModel {
         this.maxAge = -1;
     }
 
-    initKeys() {
-        $.ajax({
-            url: 'cpu-stats/latest',
-            success: data => {
+    initKeys(obj, callback) {
+        $.getJSON('cpu-stats/latest',
+            data => {
                 const processorUsage = data.response[0].perProcessorUsage;
                 for (var i = 0; i < processorUsage.length; i++) {
                     this.keys.push('core' + i);
                 }
-            },
-            dataType: 'json',
-            async: false
-        });
+                callback.call(obj);
+            }
+        );
     }
 
     update() {
@@ -42,7 +40,10 @@ class CpuStatsModel {
 }
 
 class CpuStatsView {
-    constructor(keys, mouseover, mouseout) {
+    init(keys, mouseover, mouseout) {
+        if (this.chart) {
+            this.chart.destroy();
+        }
         this.chart = c3.generate({
             bindto: '#chart',
             data: {
@@ -84,6 +85,27 @@ class CpuStatsView {
         });
     }
 
+    setPlaceholder() {
+        this.chart = c3.generate({
+            bindto: '#chart',
+            data: { rows: [] },
+            padding: {
+                top: 20,
+                right: 50,
+                left: 50
+            },
+            grid: {
+                y: { show: true }
+            },
+            axis: {
+                y: {
+                    default: [0, 100],
+                    max: 100
+                }
+            }
+        })
+    }
+
     setData(data) {
         this.chart.load({
             rows: data
@@ -94,25 +116,32 @@ class CpuStatsView {
 class CpuStatsController {
     constructor() {
         this.model = new CpuStatsModel();
-        this.model.initKeys();
-        this.view = new CpuStatsView(this.model.keys,
-                (d, i) => { this.enabled = false; },
-                (d, i) => { this.enabled = true; }
-            );
+        this.view = new CpuStatsView();
+        this.view.setPlaceholder();
         this.enabled = true;
         this.updatePeriod = 1000;
         this.intervalId = null;
+
+        this.model.initKeys(this, () => {
+            this.view.init(this.model.keys,
+                    (d, i) => { this.enabled = false; },
+                    (d, i) => { this.enabled = true; }
+                );
+        });
     }
 
     stop() {
-        if (this.intervalId != null) {
+        if (this.intervalId) {
             window.clearInterval(this.intervalId);
+            this.intervalId = null;
         }
     }
 
     start() {
-        const _this = this;
-        this.intervalId = setInterval(() => { _this.update.call(_this); }, this.updatePeriod);
+        if (this.intervalId) {
+            stop();
+        }
+        this.intervalId = window.setInterval(() => { this.update(); }, this.updatePeriod);
     }
 
     setUpdatePeriod(period) {
@@ -135,14 +164,20 @@ class CpuStatsController {
 const cpuStatsController = new CpuStatsController();
 
 function setUpdatePeriod(v) {
-    cpuStatsController.stop();
-    cpuStatsController.setUpdatePeriod(v);
-    cpuStatsController.start();
+    cpuStatsController.stop.call(cpuStatsController);
+    cpuStatsController.setUpdatePeriod.call(cpuStatsController, v);
+    cpuStatsController.start.call(cpuStatsController);
 }
 
+var updatePeriodSelect = document.getElementById('updatePeriodSelect');
+updatePeriodSelect.addEventListener('change', () => { setUpdatePeriod(updatePeriodSelect.value); });
+
 function setDataAgeLimit(v) {
-    cpuStatsController.setMaxAge(v);
+    cpuStatsController.setMaxAge.call(cpuStatsController, v);
 }
+
+var dataAgeLimitSelect = document.getElementById('dataAgeLimitSelect');
+dataAgeLimitSelect.addEventListener('change', () => { setDataAgeLimit(dataAgeLimitSelect.value); });
 
 window.addEventListener("load", function() {
     setDataAgeLimit(this.dataAgeLimitSelect.value);

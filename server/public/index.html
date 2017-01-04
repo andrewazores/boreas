@@ -9,10 +9,9 @@
   </head>
   <body>
     <div id="chart"></div>
-    <script src="/lib/bundle.js"></script>
     <div id="updatePeriod">
       <p>Update Period</p>
-      <select id="updatePeriodSelect" onchange='setUpdatePeriod(this.value);'>
+      <select id="updatePeriodSelect">
         <option selected=true value=1000>1 second</option>
         <option value=2000>2 seconds</option>
         <option value=5000>5 seconds</option>
@@ -20,7 +19,7 @@
     </div>
     <div id="dataAgeLimit">
       <p>Data Age limit</p>
-      <select id="dataAgeLimitSelect" onchange='setDataAgeLimit(this.value);'>
+      <select id="dataAgeLimitSelect">
         <option value=10>10 seconds</option>
         <option selected=true value=30>30 seconds</option>
         <option value=60>1 minute</option>
@@ -30,5 +29,6 @@
         <option value=3600>1 hour</option>
       </select>
     </div>
+    <script src="/lib/bundle.js"></script>
   </body>
 </html>
