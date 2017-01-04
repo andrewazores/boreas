@@ -1,6 +1,6 @@
 'use strict';
 
-export default class ChartController {
+export default class BasicChartController {
     constructor(model, view) {
         this.model = model;
         this.view = view;

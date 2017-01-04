@@ -1,6 +1,6 @@
 'use strict';
 
-import ChartController from './controller.js';
+import BasicChartController from './basic-chart-controller.js';
 import TimeSeriesSplineView from './time-series-spline-view.js';
 
 class CpuStatsModel {
@@ -48,7 +48,7 @@ class CpuStatsModel {
     }
 }
 
-const cpuStatsController = new ChartController(new CpuStatsModel(), new TimeSeriesSplineView());
+const cpuStatsController = new BasicChartController(new CpuStatsModel(), new TimeSeriesSplineView());
 
 function setUpdatePeriod(v) {
     cpuStatsController.stop.call(cpuStatsController);
