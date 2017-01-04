@@ -2,10 +2,11 @@
 
 import BasicChartController from './basic-chart-controller.js';
 import TimeSeriesSplineView from './time-series-spline-view.js';
+import BasicModel from './basic-model.js';
 
-class CpuStatsModel {
+class CpuStatsModel extends BasicModel {
     constructor() {
-        this.data = [];
+        super();
         this.keys = ['date'];
         this.maxAge = -1;
     }
