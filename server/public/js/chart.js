@@ -7,14 +7,14 @@ class CpuStatsModel {
         this.maxAge = -1;
     }
 
-    initKeys(obj, callback) {
+    initKeys(callback) {
         $.getJSON('cpu-stats/latest',
             data => {
                 const processorUsage = data.response[0].perProcessorUsage;
                 for (var i = 0; i < processorUsage.length; i++) {
                     this.keys.push('core' + i);
                 }
-                callback.call(obj);
+                callback(this.keys);
             }
         );
     }
@@ -122,8 +122,8 @@ class CpuStatsController {
         this.updatePeriod = 1000;
         this.intervalId = null;
 
-        this.model.initKeys(this, () => {
-            this.view.init(this.model.keys,
+        this.model.initKeys((keys) => {
+            this.view.init(keys,
                     (d, i) => { this.enabled = false; },
                     (d, i) => { this.enabled = true; }
                 );
