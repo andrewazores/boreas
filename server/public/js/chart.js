@@ -25,19 +25,23 @@ class CpuStatsModel {
             const date = new Date(parseInt(resp.timeStamp.$numberLong));
             this.data.push([date].concat(resp.perProcessorUsage));
 
-            while (this.data.length > 0) {
-                const now = Date.now();
-                const oldest = this.data[0];
-                const age = (now - oldest[0]) / 1000;
-                if (this.maxAge > 0 && age > this.maxAge) {
-                    this.data.shift();
-                } else {
-                    break;
-                }
-            }
+            this.trim();
 
             callback(this.keys, this.data);
         });
+    }
+
+    trim() {
+        while (this.data.length > 0) {
+            const now = Date.now();
+            const oldest = this.data[0];
+            const age = (now - oldest[0]) / 1000;
+            if (this.maxAge > 0 && age > this.maxAge) {
+                this.data.shift();
+            } else {
+                break;
+            }
+        }
     }
 }
 
@@ -164,6 +168,8 @@ class CpuStatsController {
 
     setMaxAge(maxAge) {
         this.model.maxAge = maxAge;
+        this.model.trim();
+        this.view.setData([this.model.keys].concat(this.model.data));
     }
 }
 
