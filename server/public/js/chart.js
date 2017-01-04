@@ -19,7 +19,7 @@ class CpuStatsModel {
         );
     }
 
-    update() {
+    update(callback) {
         $.getJSON('cpu-stats/latest', data => {
             const resp = data.response[0];
             const date = new Date(parseInt(resp.timeStamp.$numberLong));
@@ -35,6 +35,8 @@ class CpuStatsModel {
                     break;
                 }
             }
+
+            callback(this.keys, this.data);
         });
     }
 }
@@ -149,11 +151,12 @@ class CpuStatsController {
     }
 
     update() {
-        this.model.update();
-        if (!this.enabled) {
-            return;
-        }
-        this.view.setData([this.model.keys].concat(this.model.data));
+        this.model.update((keys, data) => {
+            if (!this.enabled) {
+                return;
+            }
+            this.view.setData([keys].concat(data));
+        });
     }
 
     setMaxAge(maxAge) {
