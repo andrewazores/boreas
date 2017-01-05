@@ -11,9 +11,9 @@ export default class BasicChartController {
 
         this.model.initKeys(keys => {
             this.view.init(keys,
-                    (d, i) => { this.enabled = false; },
-                    (d, i) => { this.enabled = true; }
-                );
+                (d, i) => { this.enabled = false; },
+                (d, i) => { this.enabled = true; }
+            );
         });
     }
 

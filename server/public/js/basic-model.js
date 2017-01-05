@@ -1,18 +1,18 @@
 export default class BasicModel {
-  constructor() {
-    this.data = [];
-    this.keys = [];
-  }
+    constructor() {
+        this.data = [];
+        this.keys = [];
+    }
 
-  initKeys(callback) {}
+    initKeys(callback) {}
 
-  update(callback) {}
+    update(callback) {}
 
-  clearData() {
-    this.data = [];
-  }
+    clearData() {
+        this.data = [];
+    }
 
-  clearKeys() {
-    this.keys = [];
-  }
+    clearKeys() {
+        this.keys = [];
+    }
 }
