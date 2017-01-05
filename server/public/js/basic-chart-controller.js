@@ -17,6 +17,13 @@ export default class BasicChartController {
         });
     }
 
+    reset() {
+        stop();
+        this.view.destroy();
+        this.model.clearData();
+        this.model.clearKeys();
+    }
+
     stop() {
         if (this.intervalId) {
             window.clearInterval(this.intervalId);

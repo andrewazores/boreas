@@ -73,5 +73,5 @@ window.addEventListener('load', function() {
 });
 
 window.addEventListener('unload',  function() {
-    cpuStatsController.stop.call(cpuStatsController);
+    cpuStatsController.reset.call(cpuStatsController);
 });

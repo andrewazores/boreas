@@ -44,6 +44,12 @@ export default class TimeSeriesSplineView {
         });
     }
 
+    destroy() {
+        if (this.chart) {
+            this.chart.destroy();
+        }
+    }
+
     setPlaceholder() {
         this.chart = c3.generate({
             bindto: '#chart',

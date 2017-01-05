@@ -7,4 +7,12 @@ export default class BasicModel {
   initKeys(callback) {}
 
   update(callback) {}
+
+  clearData() {
+    this.data = [];
+  }
+
+  clearKeys() {
+    this.keys = [];
+  }
 }
