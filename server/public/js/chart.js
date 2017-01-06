@@ -67,11 +67,11 @@ function setDataAgeLimit(v) {
 var dataAgeLimitSelect = document.getElementById('dataAgeLimitSelect');
 dataAgeLimitSelect.addEventListener('change', () => { setDataAgeLimit(dataAgeLimitSelect.value); });
 
-window.addEventListener('load', function() {
-    setDataAgeLimit(this.dataAgeLimitSelect.value);
-    setUpdatePeriod(this.updatePeriodSelect.value);
+window.addEventListener('load', () => {
+    setDataAgeLimit(dataAgeLimitSelect.value);
+    setUpdatePeriod(updatePeriodSelect.value);
 });
 
-window.addEventListener('unload',  function() {
+window.addEventListener('unload',() => {
     cpuStatsController.reset.call(cpuStatsController);
 });
