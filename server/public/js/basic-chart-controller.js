@@ -38,7 +38,7 @@ export default class BasicChartController {
         if (this.updatePeriod <= 0) {
             return;
         }
-        this.intervalId = window.setInterval(() => { this.update(); }, this.updatePeriod);
+        this.intervalId = window.setInterval(this.update.bind(this), this.updatePeriod);
     }
 
     setUpdatePeriod(period) {
