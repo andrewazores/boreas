@@ -1,10 +1,8 @@
 'use strict';
 
-export default class TimeSeriesSplineView {
-    constructor(bindPoint) {
-        this.bindPoint = bindPoint;
-    }
+import View from './view.js';
 
+export default class TimeSeriesSplineView extends View {
     init(keys, mouseover, mouseout) {
         if (this.chart) {
             this.chart.destroy();

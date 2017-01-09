@@ -10,29 +10,32 @@ export default class CpuUsageModel extends BasicModel {
         this.maxAge = -1;
     }
 
-    initKeys(callback) {
+    initKeys(onSuccess, onFailure) {
         this.appSvc.submitJsonRequest('cpu-stats/latest',
             data => {
                 const processorUsage = data.response[0].perProcessorUsage;
                 for (var i = 0; i < processorUsage.length; i++) {
                     this.keys.push('core' + i);
                 }
-                callback(this.keys);
-            }
+                onSuccess(this.keys);
+            },
+            onFailure
         );
     }
 
-    update(callback) {
+    update(onSuccess, onFailure) {
         this.appSvc.submitJsonRequest('cpu-stats/latest',
             data => {
-            const resp = data.response[0];
-            const date = new Date(parseInt(resp.timeStamp.$numberLong));
-            this.data.push([date].concat(resp.perProcessorUsage));
+                const resp = data.response[0];
+                const date = new Date(parseInt(resp.timeStamp.$numberLong));
+                this.data.push([date].concat(resp.perProcessorUsage));
 
-            this.trim();
+                this.trim();
 
-            callback(this.keys, this.data);
-        });
+                onSuccess(this.keys, this.data);
+            },
+            onFailure
+        );
     }
 
     trim() {

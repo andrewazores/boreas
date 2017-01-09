@@ -8,12 +8,15 @@ export default class BasicChartController {
         this.enabled = true;
         this.timer = appSvc.createTimer(this.update.bind(this));
 
-        this.model.initKeys(keys => {
-            this.view.init(keys,
-                (d, i) => { this.enabled = false; },
-                (d, i) => { this.enabled = true; }
-            );
-        });
+        this.model.initKeys(
+            keys => {
+                this.view.init(keys,
+                    (d, i) => { this.enabled = false; },
+                    (d, i) => { this.enabled = true; }
+                );
+            },
+            () => { this.view.showDialog('Key initialization failed'); this.reset(); }
+        );
     }
 
     reset() {
@@ -39,12 +42,15 @@ export default class BasicChartController {
     }
 
     update() {
-        this.model.update((keys, data) => {
-            if (!this.enabled) {
-                return;
-            }
-            this.view.setData([keys].concat(data));
-        });
+        this.model.update(
+            (keys, data) => {
+                if (!this.enabled) {
+                    return;
+                }
+                this.view.setData([keys].concat(data));
+            },
+            () => { this.view.showDialog('Update failed'); this.stop(); }
+        );
     }
 
     setMaxAge(maxAge) {
