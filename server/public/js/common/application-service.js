@@ -6,6 +6,14 @@ export default class ApplicationService {
         this.bindPoint = bindPoint;
     }
 
+    submitJsonRequest(path, onSuccess, onFailure, onCompletion) {
+        $.getJSON(path).done(onSuccess).fail(onFailure).always(onCompletion);
+    }
+
+    showDialog(msg) {
+        window.alert('[' + this.prefix + '] ' + msg);
+    }
+
     createId(id) {
         return this.prefix + '-' + id;
     }

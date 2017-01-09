@@ -27,7 +27,7 @@ export default class CpuUsageModule extends Module {
             var chartDiv = this.appSvc.createElement('div', 'chart');
             this.appSvc.appendChild(chartDiv);
 
-            this.cpuStatsController = new BasicChartController(this.appSvc, new CpuUsageModel(), new TimeSeriesSplineView(chartDiv));
+            this.cpuStatsController = new BasicChartController(this.appSvc, new CpuUsageModel(this.appSvc), new TimeSeriesSplineView(chartDiv));
 
             var createOption = (label, value, selected) => {
                 var opt = this.appSvc.createElement('option');

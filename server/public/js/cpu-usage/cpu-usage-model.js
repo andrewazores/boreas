@@ -3,14 +3,15 @@
 import BasicModel from '../common/basic-model.js';
 
 export default class CpuUsageModel extends BasicModel {
-    constructor() {
+    constructor(appSvc) {
         super();
+        this.appSvc = appSvc;
         this.keys = ['date'];
         this.maxAge = -1;
     }
 
     initKeys(callback) {
-        $.getJSON('cpu-stats/latest',
+        this.appSvc.submitJsonRequest('cpu-stats/latest',
             data => {
                 const processorUsage = data.response[0].perProcessorUsage;
                 for (var i = 0; i < processorUsage.length; i++) {
@@ -22,7 +23,8 @@ export default class CpuUsageModel extends BasicModel {
     }
 
     update(callback) {
-        $.getJSON('cpu-stats/latest', data => {
+        this.appSvc.submitJsonRequest('cpu-stats/latest',
+            data => {
             const resp = data.response[0];
             const date = new Date(parseInt(resp.timeStamp.$numberLong));
             this.data.push([date].concat(resp.perProcessorUsage));
