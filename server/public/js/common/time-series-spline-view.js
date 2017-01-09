@@ -1,10 +1,16 @@
+'use strict';
+
 export default class TimeSeriesSplineView {
+    constructor(bindPoint) {
+        this.bindPoint = bindPoint;
+    }
+
     init(keys, mouseover, mouseout) {
         if (this.chart) {
             this.chart.destroy();
         }
         this.chart = c3.generate({
-            bindto: '#chart',
+            bindto: this.bindPoint,
             data: {
                 x: keys[0],
                 rows: [keys],
@@ -52,7 +58,7 @@ export default class TimeSeriesSplineView {
 
     setPlaceholder() {
         this.chart = c3.generate({
-            bindto: '#chart',
+            bindto: this.bindPoint,
             data: { rows: [] },
             padding: {
                 top: 20,

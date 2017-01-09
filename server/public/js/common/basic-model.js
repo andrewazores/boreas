@@ -1,3 +1,5 @@
+'use strict';
+
 export default class BasicModel {
     constructor() {
         this.data = [];

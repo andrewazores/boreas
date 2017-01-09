@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npm install",
-    "preinstall": "browserify public/js/chart.js -o public/lib/bundle.js -t [ babelify --presets [ babili es2015 ] ]",
+    "preinstall": "browserify public/js/app.js -o public/lib/bundle.js -t [ babelify --presets [ babili es2015 ] ]",
     "postinstall": "bower update",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
