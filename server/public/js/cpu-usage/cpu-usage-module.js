@@ -1,12 +1,13 @@
 'use strict';
 
+import Module from '../common/module.js';
 import BasicChartController from '../common/basic-chart-controller.js';
 import CpuUsageModel from './cpu-usage-model.js';
 import TimeSeriesSplineView from '../common/time-series-spline-view.js';
 
-export default class CpuUsageModule {
+export default class CpuUsageModule extends Module {
     constructor(bindPoint) {
-        this.bindPoint = bindPoint;
+        super(bindPoint);
     }
 
     onStart() {
