@@ -1,13 +1,12 @@
 'use strict';
 
 export default class BasicChartController {
-    constructor(model, view) {
+    constructor(appSvc, model, view) {
         this.model = model;
         this.view = view;
         this.view.setPlaceholder();
         this.enabled = true;
-        this.updatePeriod = 1000;
-        this.intervalId = null;
+        this.timer = appSvc.createTimer(this.update.bind(this));
 
         this.model.initKeys(keys => {
             this.view.init(keys,
@@ -25,24 +24,18 @@ export default class BasicChartController {
     }
 
     stop() {
-        if (this.intervalId) {
-            window.clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
+        this.timer.stop();
     }
 
     start() {
-        if (this.intervalId) {
+        if (this.timer.isRunning()) {
             stop();
         }
-        if (this.updatePeriod <= 0) {
-            return;
-        }
-        this.intervalId = window.setInterval(this.update.bind(this), this.updatePeriod);
+        this.timer.start();
     }
 
     setUpdatePeriod(period) {
-        this.updatePeriod = period;
+        this.timer.updatePeriod = period;
     }
 
     update() {
