@@ -38,52 +38,47 @@ export default class CpuUsageModule {
                 return opt;
             }
 
-            var updatePeriodForm = document.createElement('form');
-            var updatePeriodLabel = document.createElement('label');
-            var updatePeriodSelect = document.createElement('select');
+            var createSelectForm = (id, labelText) => {
+                var form = document.createElement('form');
+                var label = document.createElement('label');
+                var select = document.createElement('select');
 
-            updatePeriodSelect.id = this.bindPoint + '-updatePeriodSelect';
-            updatePeriodSelect.name = updatePeriodSelect.id;
+                select.id = id;
+                select.name = id;
 
-            updatePeriodLabel.innerHTML = 'Update Period';
-            updatePeriodLabel.for = updatePeriodSelect.id;
+                label.innerHTML = labelText;
+                label.for = id;
 
-            updatePeriodForm.appendChild(updatePeriodLabel);
-            updatePeriodForm.appendChild(updatePeriodSelect);
-            updatePeriodSelect.appendChild(createOption('Disabled', -1));
-            updatePeriodSelect.appendChild(createOption('1 Second', 1000, true));
-            updatePeriodSelect.appendChild(createOption('2 Seconds', 2000));
-            updatePeriodSelect.appendChild(createOption('5 Seconds', 5000));
-            this.bindPoint.appendChild(updatePeriodForm);
+                form.appendChild(label);
+                form.appendChild(select);
 
-            var dataAgeForm = document.createElement('form');
-            var dataAgeLabel = document.createElement('label');
-            var dataAgeSelect = document.createElement('select');
+                return { form: form, select: select, appendChild: c => select.appendChild(c) };
+            };
 
-            dataAgeSelect.id = this.bindPoint + '-dataAgeSelect';
-            dataAgeSelect.name = dataAgeSelect.id;
+            var updatePeriod = createSelectForm(this.bindPoint + '-updatePeriodSelect', 'Update Period');
+            updatePeriod.appendChild(createOption('Disabled', -1));
+            updatePeriod.appendChild(createOption('1 Second', 1000, true));
+            updatePeriod.appendChild(createOption('2 Seconds', 2000));
+            updatePeriod.appendChild(createOption('5 Seconds', 5000));
+            this.bindPoint.appendChild(updatePeriod.form);
 
-            dataAgeLabel.innerHTML = 'Data Age Limit';
-            dataAgeLabel.for = dataAgeSelect.id;
+            var dataAge = createSelectForm(this.bindPoint + '-dataAgeSelect', 'Data Age Limit');
+            dataAge.appendChild(createOption('None', -1));
+            dataAge.appendChild(createOption('10 Seconds', 10, true));
+            dataAge.appendChild(createOption('30 Seconds', 30));
+            dataAge.appendChild(createOption('1 Minute', 60));
+            dataAge.appendChild(createOption('5 Minutes'), 300);
+            dataAge.appendChild(createOption('10 Minutes', 600));
+            dataAge.appendChild(createOption('30 Minutes', 1800));
+            dataAge.appendChild(createOption('1 Hour', 3600));
+            this.bindPoint.appendChild(dataAge.form);
 
-            dataAgeForm.appendChild(dataAgeLabel);
-            dataAgeForm.appendChild(dataAgeSelect);
-            dataAgeSelect.appendChild(createOption('None', -1));
-            dataAgeSelect.appendChild(createOption('10 Seconds', 10, true));
-            dataAgeSelect.appendChild(createOption('30 Seconds', 30));
-            dataAgeSelect.appendChild(createOption('1 Minute', 60));
-            dataAgeSelect.appendChild(createOption('5 Minutes'), 300);
-            dataAgeSelect.appendChild(createOption('10 Minutes', 600));
-            dataAgeSelect.appendChild(createOption('30 Minutes', 1800));
-            dataAgeSelect.appendChild(createOption('1 Hour', 3600));
-            this.bindPoint.appendChild(dataAgeForm);
+            updatePeriod.select.addEventListener('change', v => { this.setUpdatePeriod(v.currentTarget.value); });
 
-            updatePeriodSelect.addEventListener('change', v => { this.setUpdatePeriod(v.currentTarget.value); });
+            dataAge.select.addEventListener('change', v => { this.setDataAgeLimit(v.currentTarget.value); });
 
-            dataAgeSelect.addEventListener('change', v => { this.setDataAgeLimit(v.currentTarget.value); });
-
-            this.cpuStatsController.setUpdatePeriod.call(this.cpuStatsController, updatePeriodSelect.value);
-            this.cpuStatsController.setMaxAge.call(this.cpuStatsController, dataAgeSelect.value);
+            this.cpuStatsController.setUpdatePeriod.call(this.cpuStatsController, updatePeriod.select.value);
+            this.cpuStatsController.setMaxAge.call(this.cpuStatsController, dataAge.select.value);
         };
     }
 
