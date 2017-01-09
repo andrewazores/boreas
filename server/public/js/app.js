@@ -1,12 +1,13 @@
 'use strict';
 
+import ApplicationService from './common/application-service.js';
 import CpuUsageModule from './cpu-usage/cpu-usage-module.js';
 
 const modules = [];
 
 const cpuUsageDiv = document.createElement('div');
 cpuUsageDiv.id = 'cpuUsageDiv';
-const cpuUsageModule = new CpuUsageModule(cpuUsageDiv);
+const cpuUsageModule = new CpuUsageModule(new ApplicationService('CpuUsage', cpuUsageDiv));
 modules.push(cpuUsageModule);
 
 document.body.appendChild(cpuUsageDiv);

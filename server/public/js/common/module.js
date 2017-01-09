@@ -3,8 +3,8 @@
 const emptyFunc = () => {};
 
 export default class Module {
-    constructor(bindPoint) {
-        this.bindPoint = bindPoint;
+    constructor(appSvc) {
+        this.appSvc = appSvc;
     }
 
     onInit() {

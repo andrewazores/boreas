@@ -6,8 +6,8 @@ import CpuUsageModel from './cpu-usage-model.js';
 import TimeSeriesSplineView from '../common/time-series-spline-view.js';
 
 export default class CpuUsageModule extends Module {
-    constructor(bindPoint) {
-        super(bindPoint);
+    constructor(appSvc) {
+        super(appSvc);
     }
 
     onStart() {
@@ -24,13 +24,13 @@ export default class CpuUsageModule extends Module {
 
     onInit() {
         return () => {
-            var chartDiv = document.createElement('div');
-            chartDiv.id = this.bindPoint + '-chart';
-            this.bindPoint.appendChild(chartDiv);
+            var chartDiv = this.appSvc.createElement('div', 'chart');
+            this.appSvc.appendChild(chartDiv);
+
             this.cpuStatsController = new BasicChartController(new CpuUsageModel(), new TimeSeriesSplineView(chartDiv));
 
             var createOption = (label, value, selected) => {
-                var opt = document.createElement('option');
+                var opt = this.appSvc.createElement('option');
                 opt.value = value;
                 opt.innerHTML = label;
                 if (selected) {
@@ -40,9 +40,9 @@ export default class CpuUsageModule extends Module {
             }
 
             var createSelectForm = (id, labelText) => {
-                var form = document.createElement('form');
-                var label = document.createElement('label');
-                var select = document.createElement('select');
+                var form = this.appSvc.createElement('form');
+                var label = this.appSvc.createElement('label');
+                var select = this.appSvc.createElement('select');
 
                 select.id = id;
                 select.name = id;
@@ -56,14 +56,14 @@ export default class CpuUsageModule extends Module {
                 return { form: form, select: select, appendChild: c => select.appendChild(c) };
             };
 
-            var updatePeriod = createSelectForm(this.bindPoint + '-updatePeriodSelect', 'Update Period');
+            var updatePeriod = createSelectForm(this.appSvc.createId('updatePeriodSelect'), 'Update Period');
             updatePeriod.appendChild(createOption('Disabled', -1));
             updatePeriod.appendChild(createOption('1 Second', 1000, true));
             updatePeriod.appendChild(createOption('2 Seconds', 2000));
             updatePeriod.appendChild(createOption('5 Seconds', 5000));
-            this.bindPoint.appendChild(updatePeriod.form);
+            this.appSvc.appendChild(updatePeriod.form);
 
-            var dataAge = createSelectForm(this.bindPoint + '-dataAgeSelect', 'Data Age Limit');
+            var dataAge = createSelectForm(this.appSvc.createId('dataAgeSelect'), 'Data Age Limit');
             dataAge.appendChild(createOption('None', -1));
             dataAge.appendChild(createOption('10 Seconds', 10, true));
             dataAge.appendChild(createOption('30 Seconds', 30));
@@ -72,7 +72,7 @@ export default class CpuUsageModule extends Module {
             dataAge.appendChild(createOption('10 Minutes', 600));
             dataAge.appendChild(createOption('30 Minutes', 1800));
             dataAge.appendChild(createOption('1 Hour', 3600));
-            this.bindPoint.appendChild(dataAge.form);
+            this.appSvc.appendChild(dataAge.form);
 
             updatePeriod.select.addEventListener('change', v => { this.setUpdatePeriod(v.currentTarget.value); });
 
