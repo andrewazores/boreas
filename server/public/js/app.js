@@ -5,12 +5,12 @@ import CpuUsageModule from './cpu-usage/cpu-usage-module.js';
 
 const modules = [];
 
-const cpuUsageDiv = document.createElement('div');
-cpuUsageDiv.id = 'cpuUsageDiv';
+const rootAppSvc = new ApplicationService("ThermostatWeb", document.body);
+
+const cpuUsageDiv = rootAppSvc.createElement('div', 'cpuUsageDiv');
 const cpuUsageModule = new CpuUsageModule(new ApplicationService('CpuUsage', cpuUsageDiv));
 modules.push(cpuUsageModule);
-
-document.body.appendChild(cpuUsageDiv);
+rootAppSvc.appendChild(cpuUsageDiv);
 
 window.addEventListener('load', () => {
     modules.forEach(module => {
