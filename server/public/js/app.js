@@ -2,6 +2,7 @@
 
 import ApplicationService from './common/application-service.js';
 import CpuUsageModule from './cpu-usage/cpu-usage-module.js';
+import MemoryUsageModule from './memory-usage/memory-usage-module.js';
 
 const modules = [];
 const bindPoints = [];
@@ -13,6 +14,12 @@ bindPoints.push(cpuUsageDiv);
 
 const cpuUsageModule = new CpuUsageModule(new ApplicationService('CpuUsage', cpuUsageDiv));
 modules.push(cpuUsageModule);
+
+const memoryUsageDiv = rootAppSvc.createElement('div', 'memoryUsageDiv');
+bindPoints.push(memoryUsageDiv);
+
+const memoryUsageModule = new MemoryUsageModule(new ApplicationService('MemoryUsage', memoryUsageDiv));
+modules.push(memoryUsageModule);
 
 window.addEventListener('load', () => {
     bindPoints.forEach(bindPoint => {

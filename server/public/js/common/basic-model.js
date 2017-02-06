@@ -17,4 +17,6 @@ export default class BasicModel {
     clearKeys() {
         this.keys = [];
     }
+
+    trim() {}
 }

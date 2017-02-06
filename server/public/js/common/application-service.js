@@ -10,10 +10,28 @@ export default class ApplicationService {
         $.getJSON(path).done(onSuccess).fail(onFailure).always(onCompletion);
     }
 
-    showDialog(msg) {
-        window.alert('[' + this.prefix + '] ' + msg);
+    submitSynchronousJsonRequest(path, onSuccess, onFailure, onCompletion) {
+        $.ajax({
+            url: path,
+            success: onSuccess,
+            error: onFailure,
+            complete: onCompletion,
+            dataType: 'json',
+            async: false
+        })
     }
 
+    showDialog(msg) {
+        window.alert(createPrefixedString(msg));
+    }
+
+    log(msg) {
+        console.log(createPrefixedString(msg));
+    }
+
+    createPrefixedString(str) {
+        return '[' + this.prefix + '] ' + str;
+    }
     createId(id) {
         return this.prefix + '-' + id;
     }
