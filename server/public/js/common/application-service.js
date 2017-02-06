@@ -68,6 +68,7 @@ export class Timer {
         if (this.intervalId || this.updatePeriod <= 0) {
             return;
         }
+        this.action();
         this.intervalId = window.setInterval(this.action, this.updatePeriod);
     }
 
