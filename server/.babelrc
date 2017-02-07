@@ -1,0 +1,3 @@
+{
+    "presets": ["babili", "es2015"]
+}
