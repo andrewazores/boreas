@@ -1,5 +1,7 @@
 'use strict';
 
+import $ from 'jquery';
+
 export default class ApplicationService {
     constructor(prefix, bindPoint) {
         this.prefix = prefix;
