@@ -7,15 +7,22 @@ import MemoryUsageModule from './memory-usage/memory-usage-module.js';
 const modules = [];
 const bindPoints = [];
 
-const rootAppSvc = new ApplicationService("ThermostatWeb", document.body);
+const rootDiv = document.createElement('div');
+rootDiv.id = 'rootDiv';
+rootDiv.classList.add('pure-g');
+document.body.appendChild(rootDiv);
+
+const rootAppSvc = new ApplicationService("ThermostatWeb", rootDiv);
 
 const cpuUsageDiv = rootAppSvc.createElement('div', 'cpuUsageDiv');
+cpuUsageDiv.classList.add('pure-u-1-2');
 bindPoints.push(cpuUsageDiv);
 
 const cpuUsageModule = new CpuUsageModule(new ApplicationService('CpuUsage', cpuUsageDiv));
 modules.push(cpuUsageModule);
 
 const memoryUsageDiv = rootAppSvc.createElement('div', 'memoryUsageDiv');
+memoryUsageDiv.classList.add('pure-u-1-2');
 bindPoints.push(memoryUsageDiv);
 
 const memoryUsageModule = new MemoryUsageModule(new ApplicationService('MemoryUsage', memoryUsageDiv));
