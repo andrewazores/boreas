@@ -24,10 +24,10 @@ app.get('/:coll/latest', (req, res) => {
   }
   http.get(options, serverRes => {
     serverRes.setEncoding('utf8');
-    return serverRes.on('data', data => {
+    serverRes.on('data', data => {
       res.send(data);
     });
-  });
+  }).on('error', err => { res.sendStatus(500); console.log(err); });
 });
 
 app.listen(port, ip, () => {
