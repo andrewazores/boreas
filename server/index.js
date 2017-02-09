@@ -23,9 +23,9 @@ app.get('/:coll/latest', (req, res) => {
     path: '/' + req.params.coll + '/latest',
     method: 'GET'
   }
-  http.request(options, cpuRes => {
-    cpuRes.setEncoding('utf8');
-    return cpuRes.on('data', data => {
+  http.request(options, serverRes => {
+    serverRes.setEncoding('utf8');
+    return serverRes.on('data', data => {
       res.send(data);
     });
   }).end();
