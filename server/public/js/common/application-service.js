@@ -18,20 +18,17 @@ export default class ApplicationService {
             complete: onCompletion,
             dataType: 'json',
             async: false
-        })
+        });
     }
 
     showDialog(msg) {
-        window.alert(createPrefixedString(msg));
+        window.alert('[' + this.prefix + '] ' + msg);
     }
 
     log(msg) {
-        console.log(createPrefixedString(msg));
+        console.log('[' + this.prefix + '] ' + msg);
     }
 
-    createPrefixedString(str) {
-        return '[' + this.prefix + '] ' + str;
-    }
     createId(id) {
         return this.prefix + '-' + id;
     }
