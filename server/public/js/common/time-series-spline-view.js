@@ -1,5 +1,6 @@
 'use strict';
 
+import c3 from 'c3';
 import View from './view.js';
 
 export default class TimeSeriesSplineView extends View {
