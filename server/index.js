@@ -21,14 +21,13 @@ app.get('/:coll/latest', (req, res) => {
     hostname: '127.0.0.1',
     port: '8080',
     path: '/' + req.params.coll + '/latest',
-    method: 'GET'
   }
-  http.request(options, serverRes => {
+  http.get(options, serverRes => {
     serverRes.setEncoding('utf8');
     return serverRes.on('data', data => {
       res.send(data);
     });
-  }).end();
+  });
 });
 
 app.listen(port, ip, () => {
