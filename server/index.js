@@ -1,3 +1,5 @@
+'use strict';
+
 var http = require('http'),
   express = require('express'),
   fs = require('fs');
@@ -24,9 +26,13 @@ app.get('/:coll/latest', (req, res) => {
   }
   http.get(options, serverRes => {
     serverRes.setEncoding('utf8');
-    serverRes.on('data', data => {
-      res.send(data);
+    let rawData = '';
+    serverRes.on('data', chunk => {
+      rawData += chunk;
     });
+    serverRes.on('end', () => {
+        res.send(rawData);
+    })
   }).on('error', err => { res.sendStatus(500); console.log(err); });
 });
 
