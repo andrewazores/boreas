@@ -1,3 +1,5 @@
+'use strict';
+
 var http = require('http'),
   express = require('express'),
   fs = require('fs');
@@ -21,14 +23,17 @@ app.get('/:coll/latest', (req, res) => {
     hostname: '127.0.0.1',
     port: '8080',
     path: '/' + req.params.coll + '/latest',
-    method: 'GET'
   }
-  http.request(options, cpuRes => {
-    cpuRes.setEncoding('utf8');
-    return cpuRes.on('data', data => {
-      res.send(data);
+  http.get(options, serverRes => {
+    serverRes.setEncoding('utf8');
+    let rawData = '';
+    serverRes.on('data', chunk => {
+      rawData += chunk;
     });
-  }).end();
+    serverRes.on('end', () => {
+        res.send(rawData);
+    })
+  }).on('error', err => { res.sendStatus(500); console.log(err); });
 });
 
 app.listen(port, ip, () => {
