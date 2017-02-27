@@ -4,7 +4,7 @@
   "description": "Boreas web server",
   "main": "index.js",
   "scripts": {
-    "prestart": "mkdir -p public/lib && browserify public/js/app.js -o public/lib/bundle.js -t [ babelify --presets [ babili es2015 ] ]",
+    "prestart": "mkdir -p public/lib && cp node_modules/c3/c3.min.css public/lib && browserify public/js/app.js -o public/lib/bundle.js -t [ babelify --presets [ babili es2015 ] ]",
     "postinstall": "bower update",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/Anirudh94/boreas#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "c3": "^0.4.11",
+    "express": "^4.14.0",
+    "jquery": "^3.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
