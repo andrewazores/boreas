@@ -2,6 +2,7 @@
 
 var http = require('http'),
   express = require('express'),
+  cors = require('cors'),
   fs = require('fs');
 
 var app = express();
@@ -15,6 +16,7 @@ try {
   process.exit(1);
 }
 
+app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.get('/:coll/latest', (req, res) => {
   console.log('requested~');
